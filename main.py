@@ -1,8 +1,8 @@
-import request
 import aiohttp
 import logging
 import asyncio as ai
 import aiotk
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,18 @@ class Rpc:
                                             autoping=True)
             print("connected.")
 
+            msg = {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "state_getMetadata",
+                "params": []
+            }
+            print(json.dumps(msg))
+            await self.ws.send_json(msg)
 
+            msg = await ai.wait_for(self.ws.receive(), timeout=None)
+
+            print(msg)
 
     async def get_messages(self):
 
